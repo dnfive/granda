@@ -54,24 +54,38 @@
                     </nav>
                 </div>
                 
-                <div class="tm-main-content">                    
-                    <div class="mb-3">
-                      <label for="exampleFormControlInput1" class="form-label">Номер маршрута</label>
-                      <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                <div class="tm-main-content">  
+                    {% if errors %}
+                    {% for error in errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {{ error }}
                     </div>
-                    <div class="mb-3">
-                      <label for="exampleFormControlTextarea1" class="form-label">IP Адрес сети назначения</label>
-                      <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-                    </div>   
-                    <div class="mb-3">
-                      <label for="exampleFormControlTextarea1" class="form-label">Маску сети назначения</label>
-                      <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-                    </div>   
-                    <div class="mb-3">
-                      <label for="exampleFormControlTextarea1" class="form-label">IP Адрес шлюза</label>
-                      <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-                    </div>   
-                    <button class="btn btn-primary tm-nav-item-link tm-button" type="submit">Сохранить маршрут</button>           
+                    {% endfor %}
+                    {% endif %}
+                    {% if success %}
+                    <div class="alert alert-success" role="alert">
+                      {{ success }}
+                    </div>
+                    {% endif%}
+                    <form method="POST" action="/routing">                    
+                        <div class="mb-3">
+                          <label for="exampleFormControlInput1" class="form-label">Номер маршрута</label>
+                          <input type="text" class="form-control" name="number_route" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="{{ number_route }}">
+                        </div>
+                        <div class="mb-3">
+                          <label for="exampleFormControlTextarea1" class="form-label">IP Адрес сети назначения</label>
+                          <input type="text" class="form-control" name="dest_route" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="{{ dest_route }}">
+                        </div>   
+                        <div class="mb-3">
+                          <label for="exampleFormControlTextarea1" class="form-label">Маску сети назначения</label>
+                          <input type="text" class="form-control" name="mask_route" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="{{ mask_route }}">
+                        </div>   
+                        <div class="mb-3">
+                          <label for="exampleFormControlTextarea1" class="form-label">IP Адрес шлюза</label>
+                          <input type="text" class="form-control" name="gate_route" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" value="{{ gate_route }}">
+                        </div>   
+                        <button class="btn btn-primary tm-nav-item-link tm-button" type="submit">Сохранить маршрут</button>      
+                    </form>     
                 </div> <!-- tm-main-content -->
             </div>
 
