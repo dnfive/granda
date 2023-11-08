@@ -38,18 +38,20 @@
                             </li>
                             <li class="tm-nav-item"><a href="/routing" class="tm-nav-item-link tm-button">Маршруты(Routinng)</a>
                             </li>
-                            <li class="tm-nav-item">
-                                <select class="form-select" aria-label="Default select example">
-                                  <option selected>Тип маршрутизатора</option>
-                                  <option value="1">Juniper</option>
-                                  <option value="2">DionisNX</option>
-                                  <option value="3">Cisco</option>
-                                </select>
-                            </li>
-                            <li class="tm-nav-item">
-                                <!-- <a href="contact.html" class="tm-nav-item-link tm-button">Сохранить</a> -->
-                                <button class="btn btn-primary tm-nav-item-link tm-button" type="submit">Сохранить конфигурацию</button>
-                            </li>
+                            <form method="POST" action="/translate">  
+                                <li class="tm-nav-item">
+                                    <select class="form-select" aria-label="Default select example">
+                                      <option selected>Тип маршрутизатора</option>
+                                      <option value="1">Juniper</option>
+                                      <option value="2">DionisNX</option>
+                                      <option value="3">Cisco</option>
+                                    </select>
+                                </li>
+                                <li class="tm-nav-item">
+                                    <!-- <a href="contact.html" class="tm-nav-item-link tm-button">Сохранить</a> -->
+                                    <button class="btn btn-primary tm-nav-item-link tm-button" type="submit">Сохранить конфигурацию</button>
+                                </li>
+                            </form>
                         </ul>
                     </nav>
                 </div>

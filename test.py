@@ -37,7 +37,7 @@ def index():
 			'mask_int': mask_int,
 			'desc_int': desc_int
 			}
-			save_dict_to_file(route, "interfaces/interface_" + number_int + ".json")
+			save_dict_to_file(interface, "interfaces/interface_" + number_int + ".json")
 			success = "Интерфейс " + number_int + " Успешно сохранён!"
 			number_int = ""
 			ip_int = ""
@@ -82,6 +82,25 @@ def routing():
 
 	return render_template("routing.html", success=success, errors=errors, number_route=number_route, dest_route=dest_route, mask_route=mask_route, gate_route=gate_route)
 
+@app.route("/translate", methods=('GET', 'POST'))
+def translate():
+	results = ""
+	converter = DionisNXConverter()
+	if request.method == 'POST':
+		for i in range(0, 100):
+			interface = load_dict_from_file("interfaces/interface_" + str(i) + ".json")
+			if interface is None:
+				break
+			results = results + converter.convert_interface_to_dionisnx(interface)
+
+		for i in range(0, 100):
+			route = load_dict_from_file("routes/route_" + str(i) + ".json")
+			if route is None:
+				break
+			results = results + converter.convert_route_to_dionisnx(route)
+		write_to_file("configurations/dionisnxconf.txt", results)
+	return "<h2>Конфигурация успешно сохранена!</h2>"
+
 def check_ip_address(ip_address):
 	pattern = re.compile(r'^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$')
 	return re.match(pattern, ip_address) is not None
@@ -104,6 +123,46 @@ def load_dict_from_file(filename):
         print(f"Произошла ошибка при загрузке словаря из файла: {str(e)}")
         return None
 
+def write_to_file(file_path, text):
+    try:
+        with open(file_path, 'w') as file:
+            file.write(text)
+        print(f'Строка успешно записана в файл: {file_path}')
+    except IOError as e:
+        print(f'Произошла ошибка при записи в файл: {e}')
+
+class DionisNXConverter:
+    def __init__(self):
+        # Здесь могут быть словари с соответствиями обычных команд и команд DionisNX
+        self.command_mappings = {
+            'show interfaces': 'display interface',
+            'configure terminal': 'configure',
+            # Добавьте остальные соответствия команд здесь
+        }
+
+    def convert_interface_to_dionisnx(self, interface):
+    	# interface = {
+		# 	'number_int': int(number_int),
+		# 	'ip_int': ip_int,
+		# 	'mask_int': mask_int,
+		# 	'desc_int': desc_int
+		# 	}
+        # Проверяем, есть ли соответствие для введенной команды
+    	result = "interface Ethernet" + str(interface['number_int']) + "\n"
+    	result = result + "ip address " + interface['ip_int'] + "/" + str(interface['mask_int']) + "\n"
+    	result = result + "description " + interface['desc_int'] + "\n"
+    	result = result + "exit" + "\n"
+    	return result
+
+    def convert_route_to_dionisnx(self, route):
+    	# route = {
+		# 	'number_route': number_route,
+		# 	'dest_route': dest_route,
+		# 	'mask_route': mask_route,
+		# 	'gate_route': gate_route
+		# 	}
+        result = "ip route " + route['dest_route'] + "/" + str(route['mask_route']) + " " + route['gate_route'] + "\n"
+        return result
 
 if __name__ == '__main__':
 	app.run(port=8080, debug=True)
